@@ -40,15 +40,11 @@
             this.getLunchIn = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.lunchDuration = new System.Windows.Forms.TextBox();
-            this.timeUnit = new System.Windows.Forms.ComboBox();
             this.button9 = new System.Windows.Forms.Button();
             this.getHrsWorked = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
@@ -72,6 +68,7 @@
             this.timeIn.Name = "timeIn";
             this.timeIn.Size = new System.Drawing.Size(71, 20);
             this.timeIn.TabIndex = 1;
+            this.timeIn.Leave += new System.EventHandler(this.timeIn_Leave);
             // 
             // lunchOut
             // 
@@ -79,6 +76,7 @@
             this.lunchOut.Name = "lunchOut";
             this.lunchOut.Size = new System.Drawing.Size(71, 20);
             this.lunchOut.TabIndex = 3;
+            this.lunchOut.Leave += new System.EventHandler(this.lunchOut_Leave);
             // 
             // label2
             // 
@@ -95,6 +93,7 @@
             this.lunchIn.Name = "lunchIn";
             this.lunchIn.Size = new System.Drawing.Size(71, 20);
             this.lunchIn.TabIndex = 5;
+            this.lunchIn.Leave += new System.EventHandler(this.lunchIn_Leave);
             // 
             // label3
             // 
@@ -111,6 +110,7 @@
             this.timeOut.Name = "timeOut";
             this.timeOut.Size = new System.Drawing.Size(71, 20);
             this.timeOut.TabIndex = 7;
+            this.timeOut.Leave += new System.EventHandler(this.timeOut_Leave);
             // 
             // label4
             // 
@@ -158,45 +158,15 @@
             this.label6.TabIndex = 11;
             this.label6.Text = "Lunch Duration";
             // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(91, 30);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(32, 20);
-            this.button3.TabIndex = 13;
-            this.button3.Text = "OK";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
             // button4
             // 
             this.button4.Location = new System.Drawing.Point(91, 150);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(32, 20);
+            this.button4.Size = new System.Drawing.Size(41, 20);
             this.button4.TabIndex = 14;
-            this.button4.Text = "OK";
+            this.button4.Text = "Find";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(91, 111);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(32, 20);
-            this.button5.TabIndex = 15;
-            this.button5.Text = "OK";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(91, 70);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(32, 20);
-            this.button6.TabIndex = 16;
-            this.button6.Text = "OK";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // label7
             // 
@@ -230,28 +200,16 @@
             this.lunchDuration.AllowDrop = true;
             this.lunchDuration.Location = new System.Drawing.Point(135, 71);
             this.lunchDuration.Name = "lunchDuration";
-            this.lunchDuration.Size = new System.Drawing.Size(22, 20);
+            this.lunchDuration.Size = new System.Drawing.Size(77, 20);
             this.lunchDuration.TabIndex = 20;
-            this.lunchDuration.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // timeUnit
-            // 
-            this.timeUnit.FormattingEnabled = true;
-            this.timeUnit.Items.AddRange(new object[] {
-            "min",
-            "hr"});
-            this.timeUnit.Location = new System.Drawing.Point(163, 71);
-            this.timeUnit.Name = "timeUnit";
-            this.timeUnit.Size = new System.Drawing.Size(49, 21);
-            this.timeUnit.TabIndex = 21;
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(163, 98);
+            this.button9.Location = new System.Drawing.Point(91, 111);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(49, 49);
+            this.button9.Size = new System.Drawing.Size(41, 20);
             this.button9.TabIndex = 22;
-            this.button9.Text = "Get Lunch Out";
+            this.button9.Text = "Find";
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
@@ -300,15 +258,11 @@
             this.Controls.Add(this.label8);
             this.Controls.Add(this.getHrsWorked);
             this.Controls.Add(this.button9);
-            this.Controls.Add(this.timeUnit);
             this.Controls.Add(this.lunchDuration);
             this.Controls.Add(this.button7);
             this.Controls.Add(this.button8);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.getLunchIn);
@@ -342,15 +296,11 @@
         private System.Windows.Forms.Button getLunchIn;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.TextBox lunchDuration;
-        private System.Windows.Forms.ComboBox timeUnit;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button getHrsWorked;
         private System.Windows.Forms.Label label8;

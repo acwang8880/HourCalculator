@@ -23,7 +23,7 @@ namespace WindowsFormsApplication1
         private DateTime lunchClockIn;
         private DateTime lunchClockOut;
 
-        private int lunchLength = 30;
+        private TimeSpan lunchLength = new TimeSpan(0, 30, 0);
         private int lunchInput = 0;
 
         private TimeSpan minWork = new TimeSpan(8, 0, 0);
@@ -32,7 +32,6 @@ namespace WindowsFormsApplication1
         {
             InitializeComponent();
             this.lunchDuration.Text = lunchLength.ToString();
-            this.timeUnit.Text = "min";
             hours.Text = minWork.ToString();
         }
 
@@ -44,14 +43,10 @@ namespace WindowsFormsApplication1
             {
                 String input = timeIn.Text;
                 workClockIn = DateTime.Parse(input);    
-                
-                
-
-                //MessageBox.Show(workClockIn.ToString());
             }
             catch (FormatException format)
             {
-                MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
+                //MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
             }
             catch (Exception g)
             {
@@ -70,7 +65,7 @@ namespace WindowsFormsApplication1
             }
             catch (FormatException format)
             {
-                MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
+                //MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
             }
             catch (Exception g)
             {
@@ -85,11 +80,16 @@ namespace WindowsFormsApplication1
                 String input = lunchIn.Text;
                 lunchClockIn = DateTime.Parse(input);
 
-                //MessageBox.Show(lunchClockIn.ToString());
+                if (!lunchOut.Text.Equals(""))
+                {
+                    //make this equal to lunch duration
+                    lunchLength = lunchClockIn.Subtract(lunchClockOut);
+                    lunchDuration.Text = lunchLength.ToString();
+                }
             }
             catch (FormatException format)
             {
-                MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
+                //MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
             }
             catch (Exception g)
             {
@@ -101,32 +101,35 @@ namespace WindowsFormsApplication1
         {
             try
             {
-                if (timeOut.Text.Equals(""))
+                if (timeIn.Text != null && lunchIn.Text != null && lunchOut.Text != null)
                 {
-                    if (timeIn.Text != null && lunchIn.Text != null && lunchOut.Text != null)
+                    workClockOut = lunchClockIn.Add(minWork).Subtract(lunchClockOut.Subtract(workClockIn));
+
+                    //fix minutes
+                    string alteredMinute = "0";
+                    if (workClockOut.Minute < 10)
                     {
-                        workClockOut = lunchClockIn.Add(minWork).Subtract(lunchClockOut.Subtract(workClockIn));
-                        timeOut.Text = workClockOut.Hour + ":" + workClockOut.Minute;
+                        alteredMinute += workClockOut.Minute.ToString();
                     }
+                    else
+                    {
+                        alteredMinute = workClockOut.Minute.ToString();
+                    }
+
+                    timeOut.Text = workClockOut.Hour + ":" + alteredMinute;
                 }
                 String input = timeOut.Text;
                 workClockOut = DateTime.Parse(input);
 
-                //MessageBox.Show(workClockOut.ToString());
             }
             catch (FormatException format)
             {
-                MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
+                //MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
             }
             catch (Exception g)
             {
                 MessageBox.Show(g.Message);
             }
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            
         }
 
         private void button9_Click(object sender, EventArgs e)
@@ -138,33 +141,20 @@ namespace WindowsFormsApplication1
             catch (Exception g)
             {
                 String errorMessage = g.Message;
-                MessageBox.Show(errorMessage);
+                //MessageBox.Show(errorMessage);
             }
 
-            if (timeUnit.Text.Equals("hr"))
-            { 
-                this.lunchLength = lunchInput * 60;
-            }
-            else if (timeUnit.Text.Equals("min"))
-            {
-                this.lunchLength = lunchInput;
-            }
-            else
-            {
-                MessageBox.Show("Please enter a valid time");
-            }
+            lunchLength = TimeSpan.Parse(lunchDuration.Text);
 
             // check time limitations
-            if (this.lunchLength < 30)
+            if (this.lunchLength < new TimeSpan(0, 30, 0))
             {
                 MessageBox.Show("Lunch must be at least 30 min long.");
             }
-            else if (this.lunchLength > 60)
+            else if (this.lunchLength > new TimeSpan(0, 60, 0))
             {
                 MessageBox.Show("Lunch is longer than and hr. That's too long.");
             }
-
-            MessageBox.Show(this.lunchLength.ToString());
 
             // calc lunchin
             if (lunchClockOut == null)
@@ -172,8 +162,19 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Please input Lunch Out Time");
             }
 
-            lunchClockIn = lunchClockOut.AddMinutes(lunchLength);
-            lunchIn.Text = lunchClockIn.Hour.ToString() + ":" + lunchClockIn.Minute.ToString();
+            lunchClockIn = lunchClockOut.Add(lunchLength);
+
+            //fix minutes
+            string alteredMinute = "0";
+            if (lunchClockIn.Minute < 10)
+            {
+                alteredMinute += lunchClockIn.Minute.ToString();
+            }
+            else
+            {
+                alteredMinute = lunchClockIn.Minute.ToString();
+            }
+            lunchIn.Text = lunchClockIn.Hour.ToString() + ":" + alteredMinute;
             
             
         }
@@ -197,6 +198,107 @@ namespace WindowsFormsApplication1
             hours.Text = minWork.ToString();
             //warning if hours is above 8 hrs. No new overtime
             //MessageBox.Show(minWork.ToString());
+        }
+
+        private void timeIn_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                String input = timeIn.Text;
+                workClockIn = DateTime.Parse(input);
+
+
+
+                //MessageBox.Show(workClockIn.ToString());
+            }
+            catch (FormatException format)
+            {
+                //MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
+            }
+            catch (Exception g)
+            {
+                MessageBox.Show(g.Message);
+            }
+        }
+
+        private void lunchOut_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                String input = lunchOut.Text;
+                lunchClockOut = DateTime.Parse(input);
+
+                //MessageBox.Show(lunchClockOut.ToString());
+            }
+            catch (FormatException format)
+            {
+                MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
+            }
+            catch (Exception g)
+            {
+                MessageBox.Show(g.Message);
+            }
+        }
+
+        private void lunchIn_Leave(object sender, EventArgs e)
+        {
+            try
+            {
+                String input = lunchIn.Text;
+                lunchClockIn = DateTime.Parse(input);
+
+                if (!lunchOut.Text.Equals(""))
+                {
+                    //make this equal to lunch duration
+                    lunchLength = lunchClockIn.Subtract(lunchClockOut);
+                    lunchDuration.Text = lunchLength.ToString();
+                }
+            }
+            catch (FormatException format)
+            {
+                MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
+            }
+            catch (Exception g)
+            {
+                MessageBox.Show(g.Message);
+            }
+        }
+
+        private void timeOut_Leave(object sender, EventArgs e)
+        {
+            string alteredMinute = "0";
+            try
+            {
+                if (timeOut.Text.Equals(""))
+                {
+                    if (timeIn.Text != null && lunchIn.Text != null && lunchOut.Text != null)
+                    {
+                        workClockOut = lunchClockIn.Add(minWork).Subtract(lunchClockOut.Subtract(workClockIn));
+
+                        //fix minutes
+                        if (Int32.Parse(workClockOut.Minute.ToString()) < 10)
+                        {
+                            alteredMinute += workClockOut.Minute.ToString();
+                        }
+                        else
+                        {
+                            alteredMinute = workClockOut.Minute.ToString();
+                        }
+
+                        timeOut.Text = workClockOut.Hour + ":" + alteredMinute;
+                    }
+                }
+                String input = timeOut.Text;
+                workClockOut = DateTime.Parse(input);
+            }
+            catch (FormatException format)
+            {
+                //MessageBox.Show("Input format needs to be: \"hh:mm\" or \"hh:mm:ss\"");
+            }
+            catch (Exception g)
+            {
+                MessageBox.Show(g.Message);
+            }
         }
     }
 }
